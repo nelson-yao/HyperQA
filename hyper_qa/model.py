@@ -1,12 +1,11 @@
 import tensorflow as tf
 
 
-class Hyper_Model(tf.keras.Model):
-    def __init__(self, vocab_size, max_length, mode, embedding_matrix=None, hinge_margin=0.0):
-        super(Hyper_Model, self).__init__()
+class HyperQA(tf.keras.Model):
+    def __init__(self, vocab_size, max_length, embedding_matrix=None):
+        super(HyperQA, self).__init__()
         self.embedding_size = 300
-        self.hinge_margin = hinge_margin
-        if embedding_matrix:
+        if embedding_matrix is not None:
             self.embedding = tf.keras.layers.Embedding(vocab_size, output_dim=self.embedding_size, embeddings_initializer=tf.keras.initializers.Constant(value=embedding_matrix))
         else:
             self.embedding = tf.keras.layers.Embedding(vocab_size, output_dim=self.embedding_size, embeddings_initializer="uniform")
@@ -16,11 +15,12 @@ class Hyper_Model(tf.keras.Model):
         self.distance = tf.keras.layers.Lambda(self.distance)
         self.wf = tf.Variable(initial_value=tf.initializers.random_normal()((1,)), dtype=tf.float32)
         self.bf = tf.Variable(initial_value=tf.initializers.random_normal()((1,)), dtype=tf.float32)
-        self.mode = mode
 
-
-    def call(self, inputs, training=None, mask=None):
-        reference, good, bad = inputs # each is batch * sequence length * embedding_size
+    def call(self, inputs, training=False, mask=None):
+        if training:
+            reference, good, bad = inputs # each is batch * sequence length * embedding_size
+        else:
+            reference, good = inputs
         projection_reference = self.sequence_projection(reference)
         projection_good = self.sequence_projection(good)
 
@@ -29,7 +29,7 @@ class Hyper_Model(tf.keras.Model):
         distance_positive = self.distance(sum_reference, sum_good)
         similarity_positive = self.wf * distance_positive + self.bf
 
-        if self.mode != tf.estimator.ModeKeys.PREDICT:
+        if training:
             projection_bad = self.sequence_projection(bad)
             sum_bad = self.bow_representation(projection_bad)
             distance_negative = self.distance(sum_reference, sum_bad)
