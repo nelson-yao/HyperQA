@@ -1,0 +1,9 @@
+README.md
+hyper_qa/__init__.py
+hyper_qa/hyper.py
+hyper_qa/train.py
+hyper_qa.egg-info/PKG-INFO
+hyper_qa.egg-info/SOURCES.txt
+hyper_qa.egg-info/dependency_links.txt
+hyper_qa.egg-info/not-zip-safe
+hyper_qa.egg-info/top_level.txt
