@@ -1,6 +1,7 @@
 README.md
+setup.py
 hyper_qa/__init__.py
-hyper_qa/hyper.py
+hyper_qa/model.py
 hyper_qa/train.py
 hyper_qa.egg-info/PKG-INFO
 hyper_qa.egg-info/SOURCES.txt
