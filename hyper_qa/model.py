@@ -15,40 +15,50 @@ class HyperQA(tf.keras.Model):
         self.single_projection = tf.keras.layers.Dense(300, activation="relu", kernel_initializer=tf.keras.initializers.glorot_normal)
         self.sequence_projection = tf.keras.layers.TimeDistributed(self.single_projection, input_shape=(max_length, self.embedding_size))
         self.representation = tf.keras.layers.Lambda(self.bow_representation)
-        self.distance_layer = tf.keras.layers.Lambda(self.hyperbolic_distance)
         self.wf = tf.Variable(initial_value=tf.initializers.random_normal()((1,)), dtype=tf.float32, name="similarity_weights")
         self.bf = tf.Variable(initial_value=tf.initializers.random_normal()((1,)), dtype=tf.float32, name="similarity_biases")
 
     def call(self, inputs, training=False, mask=None):
         if training:
-            reference, good, bad = inputs
-            return self.similarity_score(reference, good), self.similarity_score(reference, bad)
+            q1, q2, q3 = inputs
         else:
-            reference, good = inputs
-            return self.similarity_score(reference, good)
+            q1, q2 = inputs
 
-    def similarity_score(self, input1, input2):
-        embedding_q1 = self.embedding(input1)
-        embedding_q2 = self.embedding(input2)
-        projection_q1 = self.sequence_projection(embedding_q1)
-        projection_q2 = self.sequence_projection(embedding_q2)
+        self.embedding_q1 = self.embedding(q1)
+        self.embedding_q2 = self.embedding(q2)
 
-        bow_q1 = self.bow_representation(projection_q1)
-        bow_q2 = self.bow_representation(projection_q2)
+        self.projection_q1 = self.sequence_projection(self.embedding_q1)
+        self.projection_q2 = self.sequence_projection(self.embedding_q2)
 
-        bow_q1 = self.dropout_layer(bow_q1)
-        bow_q2 = self.dropout_layer(bow_q2)
-        distance = self.hyperbolic_distance((bow_q1, bow_q2))
-        similarity = self.wf * distance + self.bf
-        return similarity
+        self.bow_q1 = self.bow_representation(self.projection_q1)
+        self.bow_q2 = self.bow_representation(self.projection_q2)
+
+        self.bow_q1 = self.dropout_layer(self.bow_q1)
+        self.bow_q2 = self.dropout_layer(self.bow_q2)
+
+        self.distance_pos = self.hyperbolic_distance(self.bow_q1, self.bow_q2)
+        self.similarity_pos = self.wf * self.distance_pos + self.bf
+
+
+        if training:
+            self.embedding_q3 = self.embedding(q3)
+            self.projection_q3 = self.sequence_projection(self.embedding_q3)
+            self.bow_q3 = self.bow_representation(self.projection_q3)
+            self.bow_q3 = self.dropout_layer(self.bow_q3)
+            self.distance_neg = self.hyperbolic_distance(self.bow_q1, self.bow_q3)
+            self.similarity_neg = self.wf * self.distance_neg + self.bf
+            return self.similarity_pos, self.similarity_neg
+
+        else:
+            return self.similarity_neg
+
 
     def bow_representation(self, embedding_sequence):
         embedding_sum = tf.squeeze(tf.reduce_sum(embedding_sequence, axis=2))
         normalized_num = tf.clip_by_norm(embedding_sum, 1.0, 1, name="normalization")
         return normalized_num
 
-    def hyperbolic_distance(self, inputs):
-        input1, input2 = inputs
+    def hyperbolic_distance(self, input1, input2):
         num = tf.square(tf.norm(input1 - input2, axis=-1))
         den = (1 - tf.square(tf.norm(input1, axis=-1))) * (1 - tf.square(tf.norm(input2, axis=-1)))
         distance = tf.math.acosh(1 + 2 * num / den, name="inverse_hyperbolic_cosine")
