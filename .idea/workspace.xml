@@ -2,11 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="53177b8d-8516-4577-9472-c7e08dc77b0f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/hyper_qa.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/hyper_qa.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hyper_qa/.ipynb_checkpoints/Debug - HypqerQA-checkpoint.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/hyper_qa/.ipynb_checkpoints/Debug - HypqerQA-checkpoint.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hyper_qa/Debug - HypqerQA.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/hyper_qa/Debug - HypqerQA.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/hyper_qa/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/hyper_qa/model.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,8 +15,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/hyper_qa/model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="702">
-              <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
+            <state relative-caret-position="668">
+              <caret line="48" lean-forward="true" selection-start-line="48" selection-end-line="48" />
             </state>
           </provider>
         </entry>
@@ -38,6 +33,7 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>self.</find>
+      <find>clip_by_norm</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -171,8 +167,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/hyper_qa/model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="702">
-          <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
+        <state relative-caret-position="668">
+          <caret line="48" lean-forward="true" selection-start-line="48" selection-end-line="48" />
         </state>
       </provider>
     </entry>

@@ -44,14 +44,12 @@ class HyperQA(tf.keras.Model):
 
     def bow_representation(self, embedding_sequence):
         embedding_sum = tf.squeeze(tf.reduce_sum(embedding_sequence, axis=2))
-        norm = tf.norm(embedding_sum, axis=1)
-        norm_max1 = tf.maximum(tf.constant(1.0, shape=norm.shape), norm)
-        normalized_num = embedding_sum / tf.expand_dims(norm_max1, axis=-1)
+        normalized_num = tf.clip_by_norm(embedding_sum, 1.0, 1, name="normalization")
         return normalized_num
 
     def hyperbolic_distance(self, inputs):
         input1, input2 = inputs
         num = tf.square(tf.norm(input1 - input2, axis=-1))
         den = (1 - tf.square(tf.norm(input1, axis=-1))) * (1 - tf.square(tf.norm(input2, axis=-1)))
-        distance = tf.math.acosh(1 + 2 * num / den)
+        distance = tf.math.acosh(1 + 2 * num / den, name="inverse_hyperbolic_cosine")
         return distance
