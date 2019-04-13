@@ -4,6 +4,7 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="jdk" jdkName="Python 3.6 (hyper_qa)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="nlu_dev-tools" />
   </component>
   <component name="TestRunnerService">
     <option name="projectConfiguration" value="pytest" />

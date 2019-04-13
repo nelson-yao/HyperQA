@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/hyper_qa.iml" filepath="$PROJECT_DIR$/.idea/hyper_qa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../nlu_dev-tools/.idea/nlu_dev-tools.iml" filepath="$PROJECT_DIR$/../nlu_dev-tools/.idea/nlu_dev-tools.iml" />
     </modules>
   </component>
 </project>
