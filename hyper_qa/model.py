@@ -17,7 +17,7 @@ class HyperQA(tf.keras.Model):
         self.sequence_projection = tf.keras.layers.TimeDistributed(self.single_projection, input_shape=(max_length, self.embedding_size))
         self.wf = tf.Variable(initial_value=tf.initializers.random_normal()((1,)), dtype=tf.float32, name="similarity_weights")
         self.bf = tf.Variable(initial_value=tf.initializers.random_normal()((1,)), dtype=tf.float32, name="similarity_biases")
-
+        
     def call(self, inputs, training=False, mask=None):
         if training:
             q1, q2, q3 = inputs
@@ -50,11 +50,11 @@ class HyperQA(tf.keras.Model):
             return self.similarity_pos, self.similarity_neg
 
         else:
-            return self.similarity_neg
+            return self.similarity_pos
 
 
     def bow_representation(self, embedding_sequence):
-        embedding_sum = tf.squeeze(tf.reduce_sum(embedding_sequence, axis=2))
+        embedding_sum = tf.reduce_sum(embedding_sequence, axis=2)
         normalized_num = tf.clip_by_norm(embedding_sum, 1.0, axes=1, name="normalization")
         return normalized_num
 
@@ -63,3 +63,4 @@ class HyperQA(tf.keras.Model):
         den = (1.0 - tf.square(tf.norm(input1, axis=-1))) * (1.0 - tf.square(tf.norm(input2, axis=-1)))
         distance = tf.math.acosh(1 + 2 * num / (den + epsilon), name="inverse_hyperbolic_cosine")
         return distance
+    
